@@ -1,7 +1,7 @@
 import os 
 
 # path to folder with data 
-DATASET_FOLDER = "/dataset"
+DATASET_FOLDER = os.path.expanduser("dataset")
 trainDirectory = os.path.join(DATASET_FOLDER, "train")
 testDirectory = os.path.join(DATASET_FOLDER, "test")
 
