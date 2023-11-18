@@ -22,22 +22,26 @@ import pandas as pd
 import argparse 
 import math 
 import os 
-import hydra
+# import hydra
 from torch.profiler import profile, record_function, ProfilerActivity
-from train import train_model
+# from train import train_model
 import torchvision.models as models
 
-
 # Generate input data
-@hydra.main(config_name='config_profiling.yaml')
+#@hydra.main(config_name='config_profiling.yaml')
 
-with profile( activities=[ProfilerActivity.CPU],
+model = models.resnet18()
+inputs = torch.randn(5, 3, 224, 224)
+
+
+with profile( activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
         profile_memory=True,
         record_shapes=True, 
         use_cuda=True) as prof:
      # stucture is model(inputs)
-     train_model(hcfg)
+     model(inputs)
+     #train_model(hcfg)
 
 # Print Profiler results
-print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
-print(prof.key_averages().table(sort_by="cuda_time_total", row_limit=10))
+print('CPU profiling',prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
+print('Cude profiling',prof.key_averages().table(sort_by="cuda_time_total", row_limit=10))
