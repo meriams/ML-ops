@@ -22,9 +22,9 @@ import pandas as pd
 import argparse 
 import math 
 import os 
-# import hydra
+#import hydra
 from torch.profiler import profile, record_function, ProfilerActivity
-# from train import train_model
+#from train import train_model
 import torchvision.models as models
 
 # Generate input data
@@ -33,15 +33,17 @@ import torchvision.models as models
 model = models.resnet18()
 inputs = torch.randn(5, 3, 224, 224)
 
-
 with profile( activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
         profile_memory=True,
-        record_shapes=True, 
-        use_cuda=True) as prof:
+        record_shapes=True , use_cuda=True
+        ) as prof:
      # stucture is model(inputs)
-     model(inputs)
+     model(inputs) # to see a defined model as a base for osbervations reference
      #train_model(hcfg)
+     pass
 
 # Print Profiler results
 print('CPU profiling',prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
 print('Cude profiling',prof.key_averages().table(sort_by="cuda_time_total", row_limit=10))
+
+prof.export_chrome_trace("profile_trace.json")
